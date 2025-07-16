@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql_nest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: bdvortex
+      MYSQL_USER: vortex_user
+      MYSQL_PASSWORD: vortex_pass
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - vortex_net
+
+volumes:
+  mysql_data:
+
+networks:
+  vortex_net:
