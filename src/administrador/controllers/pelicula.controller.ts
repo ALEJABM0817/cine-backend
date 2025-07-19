@@ -1,5 +1,5 @@
 import {
-  Controller, Post, Body, Get, Param, Patch, UploadedFile, UseInterceptors, ParseIntPipe,
+  Controller, Post, Body, Get, Param, Put, Patch, UploadedFile, UseInterceptors, ParseIntPipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { PeliculaService } from '../services/pelicula.service';
@@ -36,17 +36,29 @@ export class PeliculaController {
     return this.peliculaService.findOne(id);
   }
 
-  @Patch(':id')
-  update(
+  @UseInterceptors(FileInterceptor('imagen'))
+  @Put(':id')
+  async update(
     @Param('id', ParseIntPipe) id: number,
+    @UploadedFile() file: Express.Multer.File,
     @Body() dto: UpdatePeliculaDto,
   ) {
-    return this.peliculaService.update(id, dto);
+    let imageUrl: string | undefined;
+    if (file) {
+      const uploaded = await this.cloudinaryService.uploadImage(file);
+      imageUrl = uploaded.secure_url;
+    }
+    return this.peliculaService.update(id, dto, imageUrl);
   }
 
   @Patch(':id/inhabilitar')
   inhabilitar(@Param('id', ParseIntPipe) id: number) {
     return this.peliculaService.inhabilitar(id);
+  }
+
+  @Patch(':id/habilitar')
+  habilitar(@Param('id', ParseIntPipe) id: number) {
+    return this.peliculaService.habilitar(id);
   }
 
   @Get(':id/sedes-horarios')

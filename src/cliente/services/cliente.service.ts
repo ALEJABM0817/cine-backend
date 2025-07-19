@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { QueryFailedError, Repository } from 'typeorm';
 import { Cliente } from '../entities/cliente.entity';
 import { CreateClienteDto } from '../dtos/create-cliente.dto';
 import * as bcrypt from 'bcrypt';
@@ -18,6 +18,13 @@ export class ClienteService {
       ...dto,
       contraseña: hashedPassword,
     });
-    return this.clienteRepo.save(cliente);
+    try {
+      return await this.clienteRepo.save(cliente);
+    } catch (error) {
+      if (error instanceof QueryFailedError && (error as any).code === 'ER_DUP_ENTRY') {
+        throw new BadRequestException('El correo ya está registrado');
+      }
+      throw error;
+    }
   }
 }

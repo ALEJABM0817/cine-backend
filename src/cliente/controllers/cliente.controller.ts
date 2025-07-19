@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { ClienteService } from '../services/cliente.service';
 import { CreateClienteDto } from '../dtos/create-cliente.dto';
 

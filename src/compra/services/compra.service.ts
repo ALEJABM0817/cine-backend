@@ -30,7 +30,7 @@ export class CompraService {
 
     const horario = await this.horarioRepo.findOne({
       where: { id: dto.horarioId },
-      relations: ['sala'],
+      relations: ['sala', 'sala.sede'],
     });
 
     if (!cliente || !pelicula || !horario) {
@@ -55,16 +55,15 @@ export class CompraService {
 
     const nueva = await this.compraRepo.save(compra);
 
-    console.log('Enviando correo a:', cliente.email);
+    const bodyLines = [
+      `Hola ${cliente.nombre}, gracias por tu compra de los boletos para la Película: ${pelicula.titulo} en la Sede: ${sala.sede.nombre}, Sala: ${sala.nombre}`,
+      `Fecha y hora: ${horario.fecha}`,
+      `Cantidad de boletos: ${dto.cantidadBoletos}`,
+      `Estado: Confirmado`,
+    ];
     await sendMail(cliente.email, {
-      asunto: 'Confirmación de compra de boletos',
-      cuerpo: `
-        Gracias por tu compra, ${cliente.nombre}.
-        Película: ${pelicula.nombre}
-        Fecha y hora: ${horario.fecha}
-        Cantidad de boletos: ${dto.cantidadBoletos}
-        Estado: Confirmado
-      `,
+      asunto: 'Confirmación compra de boletos CineApp',
+      cuerpo: bodyLines.join('\n'),
     });
 
     return nueva;

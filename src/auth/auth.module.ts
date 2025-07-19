@@ -10,9 +10,9 @@ import { Compra } from '../compra/entities/compra.entity';
 
 @Module({
   imports: [
-    PassportModule,
+    PassportModule.register({ defaultStrategy: 'jwt', session: false }),
     JwtModule.register({
-      secret: process.env.JWT_SECRET || 'secreto123',
+      secret: 'secreto123',
       signOptions: { expiresIn: '1d' },
     }),
     TypeOrmModule.forFeature([Cliente, Compra]),

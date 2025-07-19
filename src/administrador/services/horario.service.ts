@@ -18,26 +18,44 @@ export class HorarioService {
     private salaRepo: Repository<Sala>,
   ) {}
 
-  async create(dto: CreateHorarioDto) {
-  const pelicula = await this.peliculaRepo.findOneBy({ id: dto.peliculaId });
-  const sala = await this.salaRepo.findOneBy({ id: dto.salaId });
+  async create(dto: CreateHorarioDto | CreateHorarioDto[]) {
+    const datos = Array.isArray(dto) ? dto : [dto];
+    const horarios: Horario[] = [];
 
-  if (!pelicula || !sala) {
-    throw new NotFoundException('Pelicula o sala no encontrada');
+    for (const item of datos) {
+      const pelicula = await this.peliculaRepo.findOneBy({ id: item.peliculaId });
+      const sala = await this.salaRepo.findOneBy({ id: item.salaId });
+
+      if (!pelicula || !sala) {
+        throw new NotFoundException('Pelicula o sala no encontrada');
+      }
+
+      const horario = this.horarioRepo.create({
+        fecha: item.fecha,
+        pelicula,
+        sala,
+      });
+
+      horarios.push(horario);
+    }
+
+    return this.horarioRepo.save(horarios);
   }
-
-  const horario = this.horarioRepo.create({
-    fecha: dto.fecha,
-    pelicula,
-    sala,
-  });
-
-  return this.horarioRepo.save(horario);
-}
 
   findAll() {
     return this.horarioRepo.find({
       relations: ['pelicula', 'sala'],
     });
+  }
+  
+  async findOne(id: number) {
+    const horario = await this.horarioRepo.findOne({
+      where: { id },
+      relations: ['pelicula', 'sala'],
+    });
+    if (!horario) {
+      throw new NotFoundException('Horario no encontrado');
+    }
+    return horario;
   }
 }

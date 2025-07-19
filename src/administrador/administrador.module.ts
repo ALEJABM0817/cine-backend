@@ -14,7 +14,6 @@ import { HorarioController } from './controllers/horario.controller';
 import { HorarioService } from './services/horario.service';
 import { CloudinaryModule } from '../cloudinary/cloudinary.module';
 import { ClienteModule } from '../cliente/cliente.module';
-import { Cliente } from '../cliente/entities/cliente.entity';
 import { ClienteAdminService } from './services/cliente-admin.service';
 import { ClienteAdminController } from './controllers/cliente-admin.controller';
 
@@ -24,8 +23,7 @@ import { ClienteAdminController } from './controllers/cliente-admin.controller';
       Pelicula,
       Sede,
       Sala,
-      Horario,
-      Cliente
+      Horario
     ]),
   ClienteModule,
   CloudinaryModule],

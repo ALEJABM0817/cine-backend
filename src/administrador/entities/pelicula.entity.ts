@@ -16,14 +16,11 @@ export class Pelicula {
   imagenUrl: string;
 
   @Column({ default: true })
-  habilitado: boolean;
-
-  @Column()
-  nombre: string;
-
-  @Column({ default: true })
   estado: boolean;
-
+  
+  @Column({default: 0})
+  precio: number;
+  
   @OneToMany(() => Horario, horario => horario.pelicula)
   horarios: Horario[];
 }

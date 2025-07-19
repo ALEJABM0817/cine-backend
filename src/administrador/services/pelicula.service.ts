@@ -11,7 +11,7 @@ export class PeliculaService {
   constructor(
     @InjectRepository(Pelicula)
     private peliculaRepo: Repository<Pelicula>,
-  ) {}
+  ) { }
 
   create(dto: CreatePeliculaDto, imagenUrl: string) {
     const nueva = this.peliculaRepo.create({ ...dto, imagenUrl });
@@ -26,52 +26,63 @@ export class PeliculaService {
     return this.peliculaRepo.findOne({ where: { id } });
   }
 
-  
-
-  async update(id: number, dto: UpdatePeliculaDto) {
+  async update(
+    id: number,
+    dto: UpdatePeliculaDto,
+    imageUrl?: string,
+  ) {
     const pelicula = await this.peliculaRepo.findOne({ where: { id } });
     if (!pelicula) throw new NotFoundException('Película no encontrada');
     Object.assign(pelicula, dto);
+    if (imageUrl) {
+      pelicula.imagenUrl = imageUrl;
+    }
     return this.peliculaRepo.save(pelicula);
   }
 
   async inhabilitar(id: number) {
     const pelicula = await this.peliculaRepo.findOne({ where: { id } });
     if (!pelicula) throw new NotFoundException('Película no encontrada');
-    pelicula.habilitado = false;
+    pelicula.estado = false;
+    return this.peliculaRepo.save(pelicula);
+  }
+
+  async habilitar(id: number) {
+    const pelicula = await this.peliculaRepo.findOne({ where: { id } });
+    if (!pelicula) throw new NotFoundException('Película no encontrada');
+    pelicula.estado = true;
     return this.peliculaRepo.save(pelicula);
   }
 
   async obtenerSedesConHorarios(idPelicula: number) {
-  const horarios = await this.peliculaRepo.manager.find<Horario>(Horario, {
-    where: {
-      pelicula: {
-        id: idPelicula,
+    const horarios = await this.peliculaRepo.manager.find<Horario>(Horario, {
+      where: {
+        pelicula: {
+          id: idPelicula,
+        },
       },
-    },
-    relations: ['sala', 'sala.sede'],
-  });
+      relations: ['sala', 'sala.sede'],
+    });
 
-  const agrupado = new Map<number, any>();
+    const agrupado = new Map<number, any>();
 
-  for (const horario of horarios) {
-    const sede = horario.sala.sede;
+    for (const horario of horarios) {
+      const sede = horario.sala.sede;
 
-    if (!agrupado.has(sede.id)) {
-      agrupado.set(sede.id, {
-        sede: { id: sede.id, nombre: sede.nombre },
-        horarios: [],
+      if (!agrupado.has(sede.id)) {
+        agrupado.set(sede.id, {
+          sede: { id: sede.id, nombre: sede.nombre },
+          horarios: [],
+        });
+      }
+
+      agrupado.get(sede.id).horarios.push({
+        id: horario.id,
+        hora: horario.fecha,
+        sala: { id: horario.sala.id, nombre: horario.sala.nombre },
       });
     }
 
-    agrupado.get(sede.id).horarios.push({
-      id: horario.id,
-      hora: horario.fecha,
-      sala: { id: horario.sala.id, nombre: horario.sala.nombre },
-    });
+    return Array.from(agrupado.values());
   }
-
-  return Array.from(agrupado.values());
-}
-  
 }

@@ -9,11 +9,17 @@ export class CreateCompraDto {
   @IsInt()
   peliculaId: number;
 
+  @IsNotEmpty()
   @IsInt()
   horarioId: number;
 
+  @IsNotEmpty()
   @IsInt()
   cantidadBoletos: number;
+
+  @IsNotEmpty()
+  @IsInt()
+  precioTotal: number;
 
   @ValidateNested()
   @Type(() => CreatePagoDto)

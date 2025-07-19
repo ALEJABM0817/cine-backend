@@ -14,12 +14,10 @@ interface CorreoContenido {
 }
 
 export async function sendMail(destinatario: string, contenido: CorreoContenido) {
-  const info = await transporter.sendMail({
+  await transporter.sendMail({
     from: `"Cine App" <homehelpersco1@gmail.com>`,
     to: destinatario,
     subject: contenido.asunto,
     text: contenido.cuerpo,
   });
-
-  console.log('Correo enviado: %s', info.messageId);
 }

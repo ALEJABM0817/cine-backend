@@ -44,11 +44,12 @@ export class AuthService {
       role: user.rol,
     };
 
+    const { contraseña, ...userData } = user;
     return {
       access_token: this.jwtService.sign(payload),
       role: user.rol,
       user: {
-        ...user,
+        ...userData,
         compras,
       },
     };

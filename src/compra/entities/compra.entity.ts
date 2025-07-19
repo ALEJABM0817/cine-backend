@@ -6,16 +6,19 @@ import { Horario } from '../../administrador/entities/horario.entity';
 export class Compra {
   @PrimaryGeneratedColumn()
   id: number;
+  
+  @Column()
+  cantidadBoletos: number;
+
+  @CreateDateColumn()
+  fechaCompra: Date;
+
+  @Column({default: 0})
+  precioTotal: number;
 
   @ManyToOne(() => Cliente, cliente => cliente.compras)
   cliente: Cliente;
 
   @ManyToOne(() => Horario, horario => horario.compras)
   horario: Horario;
-
-  @Column()
-  cantidadBoletos: number;
-
-  @CreateDateColumn()
-  fechaCompra: Date;
 }
