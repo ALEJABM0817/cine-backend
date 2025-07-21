@@ -6,7 +6,6 @@ import { ConfigModule } from '@nestjs/config';
 import { ClienteModule } from './cliente/cliente.module';
 import { CompraModule } from './compra/compra.module';
 
-
 @Module({
   imports: [
   ConfigModule.forRoot({

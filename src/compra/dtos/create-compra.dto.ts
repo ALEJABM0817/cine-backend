@@ -1,6 +1,4 @@
-import { IsInt, IsNotEmpty, ValidateNested } from 'class-validator';
-import { Type } from 'class-transformer';
-import { CreatePagoDto } from './create-pago.dto';
+import { IsInt, IsNotEmpty } from 'class-validator';
 
 export class CreateCompraDto {
   @IsInt()
@@ -20,8 +18,4 @@ export class CreateCompraDto {
   @IsNotEmpty()
   @IsInt()
   precioTotal: number;
-
-  @ValidateNested()
-  @Type(() => CreatePagoDto)
-  pago: CreatePagoDto;
 }

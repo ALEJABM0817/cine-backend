@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Get, UseGuards } from '@nestjs/common';
 import { CompraService } from '../services/compra.service';
 import { CreateCompraDto } from '../dtos/create-compra.dto';
 import { JwtAuthGuard } from '../../auth/guard/JwtAuthGuard';
@@ -11,16 +11,6 @@ export class CompraController {
   @Post()
   create(@Body() dto: CreateCompraDto) {
     return this.compraService.create(dto);
-  }
-
-  @Get('peliculas')
-  getPeliculas() {
-    return this.compraService.getPeliculasDisponibles();
-  }
-
-  @Get(':id')
-  getCompra(@Param('id') id: number) {
-    return this.compraService.getCompraById(id);
   }
 
    @Get()

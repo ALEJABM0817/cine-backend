@@ -34,6 +34,7 @@ export class HorarioService {
         fecha: item.fecha,
         pelicula,
         sala,
+        asientosDisponibles: sala.capacidad
       });
 
       horarios.push(horario);

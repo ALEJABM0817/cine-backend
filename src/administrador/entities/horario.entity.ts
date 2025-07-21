@@ -11,6 +11,9 @@ export class Horario {
   @Column()
   fecha: Date;
 
+  @Column({ default: 0 })
+  asientosDisponibles: number;
+
   @ManyToOne(() => Pelicula, pelicula => pelicula.horarios)
   pelicula: Pelicula;
 

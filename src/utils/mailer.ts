@@ -3,8 +3,8 @@ import * as nodemailer from 'nodemailer';
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'homehelpersco1@gmail.com',
-    pass: 'tgfr zuha neef ynct',
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
@@ -15,7 +15,7 @@ interface CorreoContenido {
 
 export async function sendMail(destinatario: string, contenido: CorreoContenido) {
   await transporter.sendMail({
-    from: `"Cine App" <homehelpersco1@gmail.com>`,
+    from: `"Cine App" <${process.env.EMAIL_USER}>`,
     to: destinatario,
     subject: contenido.asunto,
     text: contenido.cuerpo,

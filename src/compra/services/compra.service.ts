@@ -39,12 +39,12 @@ export class CompraService {
 
     const sala = horario.sala;
 
-    if (sala.capacidad < dto.cantidadBoletos) {
+    if (horario.asientosDisponibles < dto.cantidadBoletos) {
       throw new BadRequestException('No hay suficientes boletos disponibles');
     }
 
-    sala.capacidad -= dto.cantidadBoletos;
-    await this.salaRepo.save(sala);
+    horario.asientosDisponibles -= dto.cantidadBoletos;
+    await this.horarioRepo.save(horario);
 
     const compra = this.compraRepo.create({
       cliente,
@@ -67,17 +67,6 @@ export class CompraService {
     });
 
     return nueva;
-  }
-
-  getPeliculasDisponibles() {
-    return this.peliculaRepo.find({ where: { estado: true } });
-  }
-
-  getCompraById(id: number) {
-    return this.compraRepo.findOne({
-      where: { id },
-      relations: ['cliente', 'horario', 'horario.pelicula', 'horario.sala'],
-    });
   }
 
   findAll() {

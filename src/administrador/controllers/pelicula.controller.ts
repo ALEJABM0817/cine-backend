@@ -5,6 +5,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { PeliculaService } from '../services/pelicula.service';
 import { CreatePeliculaDto } from '../dtos/create-pelicula.dto';
 import { UpdatePeliculaDto } from '../dtos/update-pelicula.dto';
+import { HorarioService } from '../services/horario.service';
 import { CloudinaryService } from '../../cloudinary/cloudinary.service';
 import { Express } from 'express';
 
